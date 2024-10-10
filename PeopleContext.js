@@ -34,7 +34,12 @@ export const PeopleProvider = ({ children }) => {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
   };
 
-  return <PeopleContext.Provider value={{ people, addPerson }}>{children}</PeopleContext.Provider>;
+  const deletePerson = async (id) => {
+    console.log(`delete this is: ${id}`);
+  };
+
+
+  return <PeopleContext.Provider value={{ people, addPerson, deletePerson }}>{children}</PeopleContext.Provider>;
 };
 
 export default PeopleContext;
