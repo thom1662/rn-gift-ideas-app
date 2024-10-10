@@ -5,33 +5,57 @@ import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FAB } from '@rneui/themed';
 import PeopleContext from '../PeopleContext';
 import { GestureHandlerRootView, Swipeable, TouchableOpacity } from 'react-native-gesture-handler';
-import { Icon } from '@rneui/base';
+import { Icon, ListItem } from '@rneui/base';
 
 export default function PeopleScreen() {
   const navigation = useNavigation();
 
   const { people, deletePerson } = useContext(PeopleContext);
 
-  const renderItem = ({ item }) => (
-    <Swipeable renderRightActions={() => renderRightActions(item.id)}>
-      <View style={styles.listItem}>
-        <Text>{item.name}</Text>
-        <Text>{item.dob}</Text>
-      </View>
-    </Swipeable>
-  );
 
-  const renderRightActions = (id) => (
-    <TouchableOpacity onPress={() => deletePerson(id)} style={styles.deleteButton}>
-      <Icon name='delete' size={32} color='white' />
-      <Text style={styles.deleteText}>
-        Delete</Text>
-    </TouchableOpacity>
-  );
+const renderItem = ({ item }) => (
+  <ListItem.Swipeable
+    rightWidth={100}
+    rightContent={() => (
+      <TouchableOpacity onPress={() => deletePerson(item.id)} style={styles.deleteButton}>
+        <Icon name='delete' size={32} color='white' />
+        <Text style={styles.deleteText}>Delete</Text>
+      </TouchableOpacity>
+    )}
+  >
+    <ListItem.Content>
+      <ListItem.Title>{item.name}</ListItem.Title>
+      <ListItem.Subtitle>{item.dob}</ListItem.Subtitle>
+    </ListItem.Content>
+
+    <ListItem.Chevron />
+  </ListItem.Swipeable>
+);
+
+  // const renderItem = ({ item }) => (
+  //   <Swipeable renderRightActions={() => renderRightActions(item.id)}>
+  //     <View 
+  //     style={styles.listItem}
+
+  //     >
+  //       <Text>{item.name}</Text>
+  //       <Text>{item.dob}</Text>
+  //     </View>
+  //   </Swipeable>
+  // );
+
+  // const renderRightActions = (id) => (
+  //   <TouchableOpacity onPress={() => deletePerson(id)} style={styles.deleteButton}>
+  //     <Icon name='delete' size={32} color='white' />
+  //     <Text style={styles.deleteText}>
+  //       Delete</Text>
+  //   </TouchableOpacity>
+  // );
 
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={styles.container}>
+
         <FlatList
           style={styles.list}
           data={people}
@@ -68,11 +92,18 @@ const styles = StyleSheet.create({
   list: {
     marginVertical: 10,
   },
+  // swipeDelete: {
+  //   backgroundColor: 'red',
+  //   justifyContent: 'center',
+  //   alignItems: 'center',
+  //   //width: 80,
+  //   height: '100%',
+  // },
   deleteButton: {
     backgroundColor: 'red',
+    flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
-    width: 80,
     height: '100%',
   },
   deleteText: {
