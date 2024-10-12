@@ -12,39 +12,42 @@ export default function PeopleScreen() {
 
   const { people, deletePerson } = useContext(PeopleContext);
 
+  const renderItem = ({ item }) => (
+    <ListItem.Swipeable
+      onPress={() => navigation.navigate('Ideas', { id: item.id })}
+      rightWidth={100}
+      rightContent={() => (
+        <TouchableOpacity onPress={() => deletePerson(item.id)} style={styles.deleteButton}>
+          <Icon name='delete' size={32} color='white' />
+          <Text style={styles.deleteText}>Delete</Text>
+        </TouchableOpacity>
+      )}
+    >
+      <ListItem.Content>
+        <ListItem.Title>{item.name}</ListItem.Title>
+        <ListItem.Subtitle>{item.dob}</ListItem.Subtitle>
+      </ListItem.Content>
 
-const renderItem = ({ item }) => (
-  <ListItem.Swipeable
-    onPress={() => navigation.navigate('Ideas', { id: item.id })}
-    rightWidth={100}
-    rightContent={() => (
-      <TouchableOpacity onPress={() => deletePerson(item.id)} style={styles.deleteButton}>
-        <Icon name='delete' size={32} color='white' />
-        <Text style={styles.deleteText}>Delete</Text>
-      </TouchableOpacity>
-    )}
-  >
-    <ListItem.Content>
-      <ListItem.Title>{item.name}</ListItem.Title>
-      <ListItem.Subtitle>{item.dob}</ListItem.Subtitle>
-    </ListItem.Content>
-
-    <ListItem.Chevron />
-  </ListItem.Swipeable>
-);
-
+      <ListItem.Chevron />
+    </ListItem.Swipeable>
+  );
 
   return (
     <GestureHandlerRootView>
       <SafeAreaView style={styles.container}>
-
-        <FlatList
-          style={styles.list}
-          data={people}
-          keyExtractor={(item) => item.id}
-          renderItem={renderItem}
-          ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-        />
+        {people.length === 0 ? (
+          <View style={styles.empty}>
+            <Text style={styles.emptyMsg}>Add a Person to get started</Text>
+          </View>
+        ) : (
+          <FlatList
+            style={styles.list}
+            data={people}
+            keyExtractor={(item) => item.id}
+            renderItem={renderItem}
+            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          />
+        )}
 
         <FAB
           size='small'
@@ -66,6 +69,11 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  empty: {
+    flex: 1,
+    justifyContent: 'center',
+    alignItems: 'center',
+  },
   list: {
     marginVertical: 10,
   },
@@ -78,7 +86,7 @@ const styles = StyleSheet.create({
   },
   deleteText: {
     color: 'white',
-    fontWeight: "bold",
+    fontWeight: 'bold',
   },
   fab: {
     position: 'absolute',

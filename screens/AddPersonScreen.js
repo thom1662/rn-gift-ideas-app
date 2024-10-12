@@ -1,5 +1,5 @@
 import React, { useContext, useState } from 'react';
-import { View, TextInput, Button, StyleSheet } from 'react-native';
+import { View, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
 import PeopleContext from '../PeopleContext';
 import DatePicker from 'react-native-modern-datepicker';
 import { Input } from '@rneui/themed';

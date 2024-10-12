@@ -35,9 +35,10 @@ export const PeopleProvider = ({ children }) => {
   };
 
   const deletePerson = async (id) => {
-    console.log(`delete this id: ${id}`);
+    //console.log(`delete this id: ${id}`);
     const updatedPeople = people.filter((person) => person.id !== id);
     setPeople(updatedPeople);
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
   };
 
 
