@@ -1,6 +1,6 @@
 import { useNavigation } from '@react-navigation/native';
 import { useContext } from 'react';
-import { Button, FlatList, View, Text, SafeAreaView, StyleSheet } from 'react-native';
+import { FlatList, View, Text, SafeAreaView, StyleSheet } from 'react-native';
 import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FAB } from '@rneui/themed';
 import PeopleContext from '../PeopleContext';
@@ -15,6 +15,7 @@ export default function PeopleScreen() {
 
 const renderItem = ({ item }) => (
   <ListItem.Swipeable
+    onPress={() => navigation.navigate('Ideas', { id: item.id })}
     rightWidth={100}
     rightContent={() => (
       <TouchableOpacity onPress={() => deletePerson(item.id)} style={styles.deleteButton}>
@@ -32,25 +33,6 @@ const renderItem = ({ item }) => (
   </ListItem.Swipeable>
 );
 
-  // const renderItem = ({ item }) => (
-  //   <Swipeable renderRightActions={() => renderRightActions(item.id)}>
-  //     <View 
-  //     style={styles.listItem}
-
-  //     >
-  //       <Text>{item.name}</Text>
-  //       <Text>{item.dob}</Text>
-  //     </View>
-  //   </Swipeable>
-  // );
-
-  // const renderRightActions = (id) => (
-  //   <TouchableOpacity onPress={() => deletePerson(id)} style={styles.deleteButton}>
-  //     <Icon name='delete' size={32} color='white' />
-  //     <Text style={styles.deleteText}>
-  //       Delete</Text>
-  //   </TouchableOpacity>
-  // );
 
   return (
     <GestureHandlerRootView>
@@ -82,23 +64,11 @@ const renderItem = ({ item }) => (
 
 const styles = StyleSheet.create({
   container: {
-    //flex: 1,
-  },
-  listItem: {
-    padding: 20,
-    backgroundColor: 'pink',
-    //borderRadius: 15,
+    flex: 1,
   },
   list: {
     marginVertical: 10,
   },
-  // swipeDelete: {
-  //   backgroundColor: 'red',
-  //   justifyContent: 'center',
-  //   alignItems: 'center',
-  //   //width: 80,
-  //   height: '100%',
-  // },
   deleteButton: {
     backgroundColor: 'red',
     flexDirection: 'row',
@@ -111,18 +81,19 @@ const styles = StyleSheet.create({
     fontWeight: "bold",
   },
   fab: {
-    // position: 'absolute',
-    // right: 50,
-    // bottom: 100,
+    position: 'absolute',
+    right: 50,
+    bottom: 40,
     marginVertical: 32,
-    //will need to make absolute later in case of long list
+    //TODO: Make closer to middle
 
     // Shadow for iOS
     shadowColor: '#000',
     shadowOffset: { width: 0, height: 2 },
     shadowOpacity: 0.6,
     shadowRadius: 4,
+
     // Elevation for Android
-    elevation: 5,
+    elevation: 4,
   },
 });
