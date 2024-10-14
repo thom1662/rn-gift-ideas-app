@@ -10,7 +10,7 @@ export default function AddPersonScreen() {
   const [name, setName] = useState('');
   const [dob, setDob] = useState('');
   const [errMsg,  setErrMsg] = useState('');
-  const { addPerson } = useContext(PeopleContext); //getting this method from PeopleContext
+  const { addPerson } = useContext(PeopleContext);
   const navigation = useNavigation();
   
   const [visible, setVisible] = useState(false);
@@ -32,12 +32,11 @@ export default function AddPersonScreen() {
       if (success) {
         navigation.goBack();
       } else {
-        console.log('Error on the person screen saving');
+        //console.log('Error on the person screen saving');
         setVisible(true);
       }
     }
   };
-
 
 
   return (

@@ -27,9 +27,8 @@ export const PeopleProvider = ({ children }) => {
 
   const addPerson = async (name, dob) => {
     try {
-
       //error simulation
-      throw new Error('cant do it');
+      //throw new Error('cant do it');
 
       const newPerson = {
         id: randomUUID(),
@@ -43,8 +42,9 @@ export const PeopleProvider = ({ children }) => {
       //console.log(sortedPeople);
       setPeople(sortedPeople);
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
+      return true;
     } catch (error) {
-      console.log("error saving person:", error);
+      //console.log("error saving person:", error);
       return false;
     }
   };

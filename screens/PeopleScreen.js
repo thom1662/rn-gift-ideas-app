@@ -60,7 +60,7 @@ export default function PeopleScreen() {
           }}
           color=''
           style={styles.fab}
-          onPress={() => navigation.navigate('AddPerson')}
+          onPress={() => navigation.navigate('AddPerson',)}
         />
       </SafeAreaView>
     </GestureHandlerRootView>
