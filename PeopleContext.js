@@ -15,7 +15,11 @@ export const PeopleProvider = ({ children }) => {
   useEffect(() => {
     const loadPeople = async () => {
       const savedPeople = await AsyncStorage.getItem(STORAGE_KEY);
-      if (savedPeople) setPeople(JSON.parse(savedPeople));
+      if (savedPeople) {
+        const parsed = JSON.parse(savedPeople);
+        const sortedPeople = sortDobs(parsed);
+        setPeople(sortedPeople);
+      }
     };
     loadPeople();
     console.log(people);
@@ -29,8 +33,10 @@ export const PeopleProvider = ({ children }) => {
       ideas: [],
     };
     const updatedPeople = [...people, newPerson];
-    console.log(updatedPeople);
-    setPeople(updatedPeople);
+
+    const sortedPeople = sortDobs(updatedPeople);
+    //console.log(sortedPeople);
+    setPeople(sortedPeople);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
   };
 
@@ -40,6 +46,18 @@ export const PeopleProvider = ({ children }) => {
     setPeople(updatedPeople);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
   };
+
+  const sortDobs = (list) => {
+    return list.sort((a, b) => {
+      const [yearA, monthA, dayA] = a.dob.split('/').map(Number);
+      const [yearB, monthB, dayB] = b.dob.split('/').map(Number);
+      if (monthA === monthB) { //if months are same, compare days
+        return dayA - dayB;
+      } else {
+        return monthA - monthB;
+      }
+    })
+  }
 
 
   return <PeopleContext.Provider value={{ people, addPerson, deletePerson }}>{children}</PeopleContext.Provider>;

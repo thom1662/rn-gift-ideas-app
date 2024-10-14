@@ -28,7 +28,7 @@ export default function PeopleScreen() {
         <ListItem.Subtitle>{item.dob}</ListItem.Subtitle>
       </ListItem.Content>
 
-      <ListItem.Chevron />
+      <Icon type='antdesign' name='gift' />
     </ListItem.Swipeable>
   );
 
