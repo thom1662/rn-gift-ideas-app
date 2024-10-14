@@ -7,6 +7,8 @@ import PeopleContext from '../PeopleContext';
 import { GestureHandlerRootView, Swipeable, TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon, ListItem } from '@rneui/base';
 
+
+
 export default function PeopleScreen() {
   const navigation = useNavigation();
 

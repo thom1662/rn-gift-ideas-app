@@ -26,18 +26,27 @@ export const PeopleProvider = ({ children }) => {
   }, []);
 
   const addPerson = async (name, dob) => {
-    const newPerson = {
-      id: randomUUID(),
-      name,
-      dob,
-      ideas: [],
-    };
-    const updatedPeople = [...people, newPerson];
+    try {
 
-    const sortedPeople = sortDobs(updatedPeople);
-    //console.log(sortedPeople);
-    setPeople(sortedPeople);
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
+      //error simulation
+      throw new Error('cant do it');
+
+      const newPerson = {
+        id: randomUUID(),
+        name,
+        dob,
+        ideas: [],
+      };
+      const updatedPeople = [...people, newPerson];
+  
+      const sortedPeople = sortDobs(updatedPeople);
+      //console.log(sortedPeople);
+      setPeople(sortedPeople);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
+    } catch (error) {
+      console.log("error saving person:", error);
+      return false;
+    }
   };
 
   const deletePerson = async (id) => {

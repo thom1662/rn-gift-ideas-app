@@ -1,9 +1,10 @@
 import React, { useContext, useState } from 'react';
-import { View, Button, StyleSheet, KeyboardAvoidingView } from 'react-native';
+import { View, Button, StyleSheet, SafeAreaView, KeyboardAvoidingView, Text, Platform } from 'react-native';
 import PeopleContext from '../PeopleContext';
 import DatePicker from 'react-native-modern-datepicker';
 import { Input } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
+import { Dialog } from '@rneui/base';
 
 export default function AddPersonScreen() {
   const [name, setName] = useState('');
@@ -11,8 +12,12 @@ export default function AddPersonScreen() {
   const [errMsg,  setErrMsg] = useState('');
   const { addPerson } = useContext(PeopleContext); //getting this method from PeopleContext
   const navigation = useNavigation();
+  
+  const [visible, setVisible] = useState(false);
+  const toggleDialog = () => setVisible(!visible);
 
-  const savePerson = () => {
+
+  const savePerson = async () => {
     let validInputs = true;
     if (!name) {
       setErrMsg('Name is required');
@@ -22,18 +27,26 @@ export default function AddPersonScreen() {
       setErrMsg('Date of Birth is required');
       validInputs = false;
     }
-    else if (validInputs) {
-      addPerson(name, dob);
-      navigation.goBack();
+    if (validInputs) {
+      const success = await addPerson(name, dob);
+      if (success) {
+        navigation.goBack();
+      } else {
+        console.log('Error on the person screen saving');
+        setVisible(true);
+      }
     }
   };
 
 
 
-
   return (
-    <View style={styles.container}>
-      <View style={styles.inputs}>
+    <SafeAreaView style={styles.container}>
+
+      <KeyboardAvoidingView
+      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
+      style={styles.inputs}>
+
         <Input 
         label='Name' 
         value={name} 
@@ -45,25 +58,37 @@ export default function AddPersonScreen() {
           style={styles.datePicker}
           mode='calendar'
           onSelectedChange={(date) => setDob(date)}
-          //selected={dob}
         />
-      </View>
+      </KeyboardAvoidingView>
 
       <Button title='Save' onPress={savePerson} />
       <Button title='Cancel' onPress={() => navigation.goBack()} />
-    </View>
+
+      <Dialog isVisible={visible} overlayStyle={styles.modal}>
+        <Dialog.Title title='Something went wrong :('/>
+        <Text>Unable to save this person</Text>
+        <Dialog.Actions>
+          <Button title='Close' onPress={toggleDialog}>OK</Button>
+        </Dialog.Actions>
+      </Dialog>
+    </SafeAreaView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    //padding: 20,
   },
   inputs: {
+    flex: 1,
     paddingVertical: 24,
   },
   datePicker: {
     borderRadius: 20,
+  },
+  modal: {
+    padding: 20,
+    backgroundColor: 'white',
+    borderRadius: 10,
   },
 });
