@@ -68,6 +68,8 @@ export const PeopleProvider = ({ children }) => {
     })
   }
 
+  //const deleteIdea
+
 
   return <PeopleContext.Provider value={{ people, addPerson, deletePerson }}>{children}</PeopleContext.Provider>;
 };
