@@ -50,12 +50,29 @@ export const PeopleProvider = ({ children }) => {
     }
   };
 
+
+
   const deletePerson = async (id) => {
     //console.log(`delete this id: ${id}`);
     const updatedPeople = people.filter((person) => person.id !== id);
     setPeople(updatedPeople);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
   };
+
+
+
+  const deleteIdea = async (itemID, personID) => {
+    const updatedPeople = people.map((person) =>{
+      if(person.id === personID) {
+        return {...person, ideas: person.ideas.filter((idea) => idea.id !== itemID)};
+      }
+      return person;
+    });
+    setPeople(updatedPeople);
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
+  }
+
+
 
   const sortDobs = (list) => {
     return list.sort((a, b) => {
@@ -69,7 +86,6 @@ export const PeopleProvider = ({ children }) => {
     })
   }
 
-  //const deleteIdea
 
   const calculateImgDimensions = (screenWidthPercentage) => {
     const screenWidth = Dimensions.get('window').width;
@@ -82,7 +98,7 @@ export const PeopleProvider = ({ children }) => {
   //const saveIdea
 
 
-  return <PeopleContext.Provider value={{ people, addPerson, deletePerson }}>{children}</PeopleContext.Provider>;
+  return <PeopleContext.Provider value={{ people, addPerson, deletePerson, deleteIdea }}>{children}</PeopleContext.Provider>;
 };
 
 export default PeopleContext;

@@ -10,33 +10,47 @@ import { Icon, ListItem } from '@rneui/base';
 export default function IdeaScreen({ route }) {
   const navigation = useNavigation();
   const { id } = route.params;
-  const { people } = useContext(PeopleContext);
+  const { people, deleteIdea } = useContext(PeopleContext);
 
   const person = people.find(p => p.id === id);
 
-const [refresh, setRefresh] = useState(false); //remove
-    useEffect(() => { //remove all  this
-      if (person) {
-        const fakeIdea = {
-          id: randomUUID(),
-          text: 'Something Cool',
-          img: require('../assets/favicon.png'),
-          width: 500,
-          height: 500,
-        };
-        person.ideas.push(fakeIdea);
-        setRefresh(!refresh); // Trigger re-render, remove
-      }
-    }, [person]);
+  const [refresh, setRefresh] = useState(false); //remove
+
+    // useEffect(() => { //remove all  this
+    //   if (person) {
+    //     const fakeIdea = {
+    //       id: randomUUID(),
+    //       text: 'Something Cool',
+    //       img: require('../assets/favicon.png'),
+    //       width: 500,
+    //       height: 500,
+    //     };
+    //     person.ideas.push(fakeIdea);
+    //     setRefresh(!refresh); // Trigger re-render, remove
+    //   }
+    // }, [person]);
   
+
+    const handleDelete = async (itemID) => {
+      await deleteIdea(itemID, person.id);
+      setRefresh(!refresh); //re-render
+    }
+
 
 console.log(person.ideas);
 
     const renderItem = ({ item }) => (
       <ListItem >
-        <ListItem.Content>
-          <ListItem.Title>{item.text}</ListItem.Title>
-          <Image source={item.img} />
+        <ListItem.Content style={styles.listContent}>
+          
+          <View>
+            <ListItem.Title>{item.id}</ListItem.Title>
+            <Image source={item.img} />
+          </View>
+          <TouchableOpacity onPress={() => handleDelete(item.id)}>
+            <Icon type='antdesign' name='delete' />
+            <Text>Delete</Text>
+          </TouchableOpacity>
         </ListItem.Content>
       </ListItem>
     );
@@ -94,6 +108,11 @@ const styles = StyleSheet.create({
   },
   list: {
     marginVertical: 10,
+  },
+  listContent: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    alignItems: 'center',
   },
   fab: {
     position: 'absolute',
