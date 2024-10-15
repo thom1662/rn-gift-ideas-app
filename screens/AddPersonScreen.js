@@ -9,15 +9,15 @@ import { Dialog } from '@rneui/base';
 export default function AddPersonScreen() {
   const [name, setName] = useState('');
   const [dob, setDob] = useState('');
-  const [errMsg,  setErrMsg] = useState('');
+  const [errMsg, setErrMsg] = useState('');
   const { addPerson } = useContext(PeopleContext);
   const navigation = useNavigation();
-  
+
   const [visible, setVisible] = useState(false);
   const toggleDialog = () => setVisible(!visible);
 
 
-  const savePerson = async () => {
+  const handleSave = async () => {
     let validInputs = true;
     if (!name) {
       setErrMsg('Name is required');
@@ -38,36 +38,25 @@ export default function AddPersonScreen() {
     }
   };
 
-
+  
   return (
     <SafeAreaView style={styles.container}>
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.inputs}>
+        <Input label='Name' value={name} onChangeText={setName} errorMessage={errMsg} />
 
-      <KeyboardAvoidingView
-      behavior={Platform.OS === 'ios' ? 'padding' : 'height'}
-      style={styles.inputs}>
-
-        <Input 
-        label='Name' 
-        value={name} 
-        onChangeText={setName}
-        errorMessage={errMsg}
-        />
-
-        <DatePicker
-          style={styles.datePicker}
-          mode='calendar'
-          onSelectedChange={(date) => setDob(date)}
-        />
+        <DatePicker style={styles.datePicker} mode='calendar' onSelectedChange={(date) => setDob(date)} />
       </KeyboardAvoidingView>
 
-      <Button title='Save' onPress={savePerson} />
+      <Button title='Save' onPress={handleSave} />
       <Button title='Cancel' onPress={() => navigation.goBack()} />
 
       <Dialog isVisible={visible} overlayStyle={styles.modal}>
-        <Dialog.Title title='Something went wrong :('/>
+        <Dialog.Title title='Something went wrong :(' />
         <Text>Unable to save this person</Text>
         <Dialog.Actions>
-          <Button title='Close' onPress={toggleDialog}>OK</Button>
+          <Button title='Close' onPress={toggleDialog}>
+            OK
+          </Button>
         </Dialog.Actions>
       </Dialog>
     </SafeAreaView>

@@ -10,14 +10,16 @@ import { TouchableOpacity } from 'react-native-gesture-handler';
 export default function AddIdeaScreen({ route }) {
   const navigation = useNavigation();
   const { id } = route.params;
-  const { people } = useContext(PeopleContext);
+  const { people, saveIdea } = useContext(PeopleContext);
   const cameraRef = useRef(null);
   const [photo, setPhoto] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [itemText, setItemText] = useState('');
-  const [imgSize, setImgSize] = useState(null); // State to save chosen size
+  const [errMsg, setErrMsg] = useState('');
+
 
   const person = people.find((p) => p.id === id);
+
 
   // Request camera permission
   useEffect(() => {
@@ -34,22 +36,51 @@ export default function AddIdeaScreen({ route }) {
     return <Text>No access to camera, please allow access in Settings</Text>;
   }
 
+
+
   const takePicture = async () => {
     if (cameraRef.current) {
-      const availableSizes = await cameraRef.current.getAvailablePictureSizesAsync('2:3');
-      console.log('Available Picture Sizes:', availableSizes);
+      const availableSizes = await cameraRef.current.getAvailablePictureSizesAsync();
+      //console.log('Available Picture Sizes:', availableSizes);
 
-      const data = await cameraRef.current.takePictureAsync();
+      const options = {
+        quality: 0.8,
+        pictureSize: availableSizes ? availableSizes[1] : '1200x1800',
+        imageType: 'jpg',
+        skipProcessing: false,
+      };
+      //controlling image that the camera takes, will change size upon save in context
+      const data = await cameraRef.current.takePictureAsync(options);
       setPhoto(data.uri); // Set the photo URI to display
     }
   };
+
+
+  const handleSave = async () => {
+    let validInputs = true;
+    if (!itemText) {
+      setErrMsg('Gift idea name is required');
+      validInputs = false;
+    }
+    if (!photo) {
+      setErrMsg('Photo required, press shutter button to take a picture');
+      validInputs = false;
+    }
+    if (validInputs) {
+      const success = await saveIdea(person.id, itemText, photo);
+      success ? navigation.navigate('Ideas', { id: person.id }) : setErrMsg('Error saving idea');
+      //should add modal here for error saving
+
+  }
+};
+
 
   return (
     <SafeAreaView style={styles.container}>
       <Text>Add ideas for {person.name}</Text>
 
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
-        <Input label='Gift Idea' value={itemText} onChangeText={setItemText} />
+        <Input label='Gift Idea' value={itemText} onChangeText={setItemText} errorMessage={errMsg} />
       </KeyboardAvoidingView>
 
       {!photo ? (
@@ -64,7 +95,7 @@ export default function AddIdeaScreen({ route }) {
         </View>
       )}
 
-      <Button title='Save' />
+      <Button onPress={() => handleSave()} title='Save' />
       <Button onPress={() => navigation.navigate('Ideas', { id: person.id })} title='Cancel' />
     </SafeAreaView>
   );

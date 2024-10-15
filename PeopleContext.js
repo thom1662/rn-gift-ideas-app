@@ -95,10 +95,28 @@ export const PeopleProvider = ({ children }) => {
     return { imageWidth, imageHeight };
   };
 
-  //const saveIdea
+
+  const saveIdea = async (personID, text, img) => {
+//try catch here
+    const updatedPeople = people.map((person) => {
+      if (person.id === personID) {
+        const newIdea = {
+          id: randomUUID(),
+          text,
+          img,
+          ...calculateImgDimensions(0.6)
+        };
+        return { ...person, ideas: [...person.ideas, newIdea] };
+      }
+      console.log(person);
+      return person;
+    });
+    setPeople(updatedPeople);
+    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
+  };
 
 
-  return <PeopleContext.Provider value={{ people, addPerson, deletePerson, deleteIdea }}>{children}</PeopleContext.Provider>;
+  return <PeopleContext.Provider value={{ people, addPerson, deletePerson, deleteIdea, saveIdea }}>{children}</PeopleContext.Provider>;
 };
 
 export default PeopleContext;
