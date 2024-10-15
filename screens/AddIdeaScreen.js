@@ -1,9 +1,11 @@
 import { useNavigation } from '@react-navigation/native';
 import { useContext, useState, useEffect, useRef } from 'react';
 import PeopleContext from '../PeopleContext';
-import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Platform } from 'react-native';
+import { KeyboardAvoidingView, SafeAreaView, StyleSheet, Text, View, Platform, Image } from 'react-native';
 import { Camera, CameraView } from 'expo-camera';
 import { Input, Button } from '@rneui/themed';
+import { Icon } from '@rneui/base';
+import { TouchableOpacity } from 'react-native-gesture-handler';
 
 export default function AddIdeaScreen({ route }) {
   const navigation = useNavigation();
@@ -13,6 +15,7 @@ export default function AddIdeaScreen({ route }) {
   const [photo, setPhoto] = useState(null);
   const [hasPermission, setHasPermission] = useState(null);
   const [itemText, setItemText] = useState('');
+  const [imgSize, setImgSize] = useState(null); // State to save chosen size
 
   const person = people.find((p) => p.id === id);
 
@@ -31,16 +34,15 @@ export default function AddIdeaScreen({ route }) {
     return <Text>No access to camera, please allow access in Settings</Text>;
   }
 
+  const takePicture = async () => {
+    if (cameraRef.current) {
+      const availableSizes = await cameraRef.current.getAvailablePictureSizesAsync('2:3');
+      console.log('Available Picture Sizes:', availableSizes);
 
-    const takePicture = async () => {
-      if (cameraRef.current) {
-        // Access the current value of cameraRef
-        const data = await cameraRef.current.takePictureAsync();
-        setPhoto(data.uri); // Set the photo URI to display
-      }
-    };
-
-
+      const data = await cameraRef.current.takePictureAsync();
+      setPhoto(data.uri); // Set the photo URI to display
+    }
+  };
 
   return (
     <SafeAreaView style={styles.container}>
@@ -50,11 +52,17 @@ export default function AddIdeaScreen({ route }) {
         <Input label='Gift Idea' value={itemText} onChangeText={setItemText} />
       </KeyboardAvoidingView>
 
-      <CameraView ref={cameraRef} style={{ flex: 1 }}>
-
-        
-
-      </CameraView>
+      {!photo ? (
+        <CameraView ref={cameraRef} style={styles.camera}>
+          <TouchableOpacity onPress={takePicture} style={styles.camBtn}>
+            <Icon name='camera' type='materialicons' size={75} color='white' />
+          </TouchableOpacity>
+        </CameraView>
+      ) : (
+        <View style={styles.camera}>
+          <Image source={{ uri: photo }} style={{ flex: 1 }} />
+        </View>
+      )}
 
       <Button title='Save' />
       <Button onPress={() => navigation.navigate('Ideas', { id: person.id })} title='Cancel' />
@@ -65,6 +73,17 @@ export default function AddIdeaScreen({ route }) {
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    
+  },
+  camera: {
+    flex: 1,
+    margin: 24,
+    padding: 10,
+    justifyContent: 'flex-end',
+  },
+  camBtn: {
+    alignSelf: 'center',
+    backgroundColor: '#ffffff50',
+    borderRadius: 50,
+    padding: 4,
   },
 });

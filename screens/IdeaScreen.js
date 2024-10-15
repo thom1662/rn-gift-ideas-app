@@ -20,7 +20,7 @@ const [refresh, setRefresh] = useState(false); //remove
         const fakeIdea = {
           id: randomUUID(),
           text: 'Something Cool',
-          img: '../assets/favicon.png',
+          img: require('../assets/favicon.png'),
           width: 500,
           height: 500,
         };

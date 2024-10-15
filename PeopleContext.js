@@ -1,4 +1,5 @@
 import React, { createContext, useState, useEffect } from "react";
+import { Dimensions } from 'react-native';
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { randomUUID } from "expo-crypto";
 
@@ -69,6 +70,16 @@ export const PeopleProvider = ({ children }) => {
   }
 
   //const deleteIdea
+
+  const calculateImgDimensions = (screenWidthPercentage) => {
+    const screenWidth = Dimensions.get('window').width;
+    const imageWidth = screenWidth * screenWidthPercentage;
+    const aspectRatio = 2 / 3;
+    const imageHeight = imageWidth * aspectRatio;
+    return { imageWidth, imageHeight };
+  };
+
+  //const saveIdea
 
 
   return <PeopleContext.Provider value={{ people, addPerson, deletePerson }}>{children}</PeopleContext.Provider>;
