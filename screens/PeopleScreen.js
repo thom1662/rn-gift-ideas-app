@@ -1,7 +1,8 @@
 import { useNavigation } from '@react-navigation/native';
 import { useContext } from 'react';
-import { FlatList, View, Text, SafeAreaView, StyleSheet } from 'react-native';
-import { SafeAreaProvider } from 'react-native-safe-area-context';
+import { FlatList, View, Text, SafeAreaView, StyleSheet, ImageBackground } from 'react-native';
+import background from '../assets/background-sprinkles.png';
+//import { SafeAreaProvider } from 'react-native-safe-area-context';
 import { FAB } from '@rneui/themed';
 import PeopleContext from '../PeopleContext';
 import { GestureHandlerRootView, Swipeable, TouchableOpacity } from 'react-native-gesture-handler';
@@ -35,6 +36,10 @@ export default function PeopleScreen() {
   );
 
   return (
+    <ImageBackground
+    source={background}
+    style={{flex:1, resizeMode: "cover", backgroundColor: "#fff"}}>
+
     <GestureHandlerRootView>
       <SafeAreaView style={styles.container}>
         {people.length === 0 ? (
@@ -64,6 +69,9 @@ export default function PeopleScreen() {
         />
       </SafeAreaView>
     </GestureHandlerRootView>
+
+
+    </ImageBackground>
   );
 }
 

@@ -45,7 +45,7 @@ export const PeopleProvider = ({ children }) => {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
       return true;
     } catch (error) {
-      //console.log("error saving person:", error);
+      console.log("error saving person:", error);
       return false;
     }
   };
@@ -98,13 +98,16 @@ export const PeopleProvider = ({ children }) => {
 
   const saveIdea = async (personID, text, img) => {
     try{
+      //error simulation
+      // throw new Error('cant do it');
+
       const updatedPeople = people.map((person) => {
         if (person.id === personID) {
           const newIdea = {
             id: randomUUID(),
             text,
             img,
-            ...calculateImgDimensions(0.6)
+            ...calculateImgDimensions(0.6),
           };
           return { ...person, ideas: [...person.ideas, newIdea] };
         }

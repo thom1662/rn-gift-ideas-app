@@ -4,7 +4,9 @@ import PeopleContext from '../PeopleContext';
 import DatePicker from 'react-native-modern-datepicker';
 import { Input } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
-import { Dialog } from '@rneui/base';
+//import { Dialog } from '@rneui/base';
+import CustomDialog from '../components/Dialog';
+
 
 export default function AddPersonScreen() {
   const [name, setName] = useState('');
@@ -38,7 +40,7 @@ export default function AddPersonScreen() {
     }
   };
 
-  
+
   return (
     <SafeAreaView style={styles.container}>
       <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.inputs}>
@@ -50,15 +52,12 @@ export default function AddPersonScreen() {
       <Button title='Save' onPress={handleSave} />
       <Button title='Cancel' onPress={() => navigation.goBack()} />
 
-      <Dialog isVisible={visible} overlayStyle={styles.modal}>
-        <Dialog.Title title='Something went wrong :(' />
-        <Text>Unable to save this person</Text>
-        <Dialog.Actions>
-          <Button title='Close' onPress={toggleDialog}>
-            OK
-          </Button>
-        </Dialog.Actions>
-      </Dialog>
+      <CustomDialog
+      visible={visible} 
+      title='Something went wrong' 
+      message='Unable to save this person' 
+      onClose={toggleDialog} />
+
     </SafeAreaView>
   );
 }
@@ -73,10 +72,5 @@ const styles = StyleSheet.create({
   },
   datePicker: {
     borderRadius: 20,
-  },
-  modal: {
-    padding: 20,
-    backgroundColor: 'white',
-    borderRadius: 10,
   },
 });
