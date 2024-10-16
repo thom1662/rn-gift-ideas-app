@@ -40,7 +40,7 @@ export const PeopleProvider = ({ children }) => {
       const updatedPeople = [...people, newPerson];
   
       const sortedPeople = sortDobs(updatedPeople);
-      //console.log(sortedPeople);
+      console.log(sortedPeople);
       setPeople(sortedPeople);
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
       return true;

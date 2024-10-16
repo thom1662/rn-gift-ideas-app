@@ -8,12 +8,16 @@ import PeopleContext from '../PeopleContext';
 import { GestureHandlerRootView, Swipeable, TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon, ListItem } from '@rneui/base';
 
-
-
 export default function PeopleScreen() {
   const navigation = useNavigation();
 
   const { people, deletePerson } = useContext(PeopleContext);
+
+  const formatDate = (dobString) => {
+    const date = new Date(dobString.replace(/\//g, '-')); // Ensure the date string is in the correct format? no slashes
+    let options = { month: 'long', day: 'numeric' };
+    return new Intl.DateTimeFormat('en-CA', options).format(date);
+  };
 
   const renderItem = ({ item }) => (
     <ListItem.Swipeable
@@ -28,7 +32,7 @@ export default function PeopleScreen() {
     >
       <ListItem.Content>
         <ListItem.Title>{item.name}</ListItem.Title>
-        <ListItem.Subtitle>{item.dob}</ListItem.Subtitle>
+        <ListItem.Subtitle>{formatDate(item.dob)}</ListItem.Subtitle>
       </ListItem.Content>
 
       <Icon type='antdesign' name='gift' />
@@ -36,41 +40,36 @@ export default function PeopleScreen() {
   );
 
   return (
-    <ImageBackground
-    source={background}
-    style={{flex:1, resizeMode: "cover", backgroundColor: "#fff"}}>
+    <ImageBackground source={background} style={{ flex: 1, resizeMode: 'cover', backgroundColor: '#fff' }}>
+      <GestureHandlerRootView>
+        <SafeAreaView style={styles.container}>
+          {people.length === 0 ? (
+            <View style={styles.empty}>
+              <Text style={styles.emptyMsg}>Add a Person to get started</Text>
+            </View>
+          ) : (
+            <FlatList
+              style={styles.list}
+              data={people}
+              keyExtractor={(item) => item.id}
+              renderItem={renderItem}
+              ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+            />
+          )}
 
-    <GestureHandlerRootView>
-      <SafeAreaView style={styles.container}>
-        {people.length === 0 ? (
-          <View style={styles.empty}>
-            <Text style={styles.emptyMsg}>Add a Person to get started</Text>
-          </View>
-        ) : (
-          <FlatList
-            style={styles.list}
-            data={people}
-            keyExtractor={(item) => item.id}
-            renderItem={renderItem}
-            ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+          <FAB
+            size='small'
+            title='Add Person'
+            icon={{
+              name: 'add',
+              color: 'white',
+            }}
+            color=''
+            style={styles.fab}
+            onPress={() => navigation.navigate('AddPerson')}
           />
-        )}
-
-        <FAB
-          size='small'
-          title='Add Person'
-          icon={{
-            name: 'add',
-            color: 'white',
-          }}
-          color=''
-          style={styles.fab}
-          onPress={() => navigation.navigate('AddPerson',)}
-        />
-      </SafeAreaView>
-    </GestureHandlerRootView>
-
-
+        </SafeAreaView>
+      </GestureHandlerRootView>
     </ImageBackground>
   );
 }
