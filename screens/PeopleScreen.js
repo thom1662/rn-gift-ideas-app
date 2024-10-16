@@ -21,6 +21,7 @@ export default function PeopleScreen() {
 
   const renderItem = ({ item }) => (
     <ListItem.Swipeable
+      containerStyle={styles.listItem}
       onPress={() => navigation.navigate('Ideas', { id: item.id })}
       rightWidth={100}
       rightContent={() => (
@@ -53,7 +54,7 @@ export default function PeopleScreen() {
               data={people}
               keyExtractor={(item) => item.id}
               renderItem={renderItem}
-              ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
+              ItemSeparatorComponent={() => <View style={{ height: 16 }} />}
             />
           )}
 
@@ -85,6 +86,10 @@ const styles = StyleSheet.create({
   },
   list: {
     marginVertical: 10,
+  },
+  listItem: {
+    backgroundColor: '#F9F6F2',
+    padding: 20,
   },
   deleteButton: {
     backgroundColor: 'red',
