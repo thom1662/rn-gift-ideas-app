@@ -87,9 +87,9 @@ export const PeopleProvider = ({ children }) => {
   }
 
 
-  const calculateImgDimensions = (screenWidthPercentage) => {
+  const calculateImgDimensions = (screenWidthPercent) => {
     const screenWidth = Dimensions.get('window').width;
-    const imageWidth = screenWidth * screenWidthPercentage;
+    const imageWidth = screenWidth * screenWidthPercent;
     const aspectRatio = 2 / 3;
     const imageHeight = imageWidth * aspectRatio;
     return { imageWidth, imageHeight };
@@ -97,23 +97,28 @@ export const PeopleProvider = ({ children }) => {
 
 
   const saveIdea = async (personID, text, img) => {
-//try catch here
-    const updatedPeople = people.map((person) => {
-      if (person.id === personID) {
-        const newIdea = {
-          id: randomUUID(),
-          text,
-          img,
-          ...calculateImgDimensions(0.6)
-        };
-        return { ...person, ideas: [...person.ideas, newIdea] };
-      }
-      console.log(person);
-      return person;
-    });
-    setPeople(updatedPeople);
-    await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
+    try{
+      const updatedPeople = people.map((person) => {
+        if (person.id === personID) {
+          const newIdea = {
+            id: randomUUID(),
+            text,
+            img,
+            ...calculateImgDimensions(0.6)
+          };
+          return { ...person, ideas: [...person.ideas, newIdea] };
+        }
+        console.log(person);
+        return person;
+      });
+      setPeople(updatedPeople);
+      await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
+      return true;
+    } catch (error) {
+      console.log("error saving idea:", error);
+      return false;
   };
+}
 
 
   return <PeopleContext.Provider value={{ people, addPerson, deletePerson, deleteIdea, saveIdea }}>{children}</PeopleContext.Provider>;

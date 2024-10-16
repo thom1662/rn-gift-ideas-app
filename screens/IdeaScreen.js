@@ -15,20 +15,6 @@ export default function IdeaScreen({ route }) {
   const person = people.find(p => p.id === id);
 
   const [refresh, setRefresh] = useState(false); //remove
-
-    // useEffect(() => { //remove all  this
-    //   if (person) {
-    //     const fakeIdea = {
-    //       id: randomUUID(),
-    //       text: 'Something Cool',
-    //       img: require('../assets/favicon.png'),
-    //       width: 500,
-    //       height: 500,
-    //     };
-    //     person.ideas.push(fakeIdea);
-    //     setRefresh(!refresh); // Trigger re-render, remove
-    //   }
-    // }, [person]);
   
 
     const handleDelete = async (itemID) => {
@@ -39,13 +25,22 @@ export default function IdeaScreen({ route }) {
 
 console.log(person.ideas);
 
-    const renderItem = ({ item }) => (
-      <ListItem >
+    const renderItem = ({ item }) => {
+      const getImgSource = (img) => {
+        if (typeof img === 'string') {
+          return { uri: img };
+        }
+        return null;
+    };
+      
+      return (
+      <ListItem>
         <ListItem.Content style={styles.listContent}>
-          
           <View>
-            <ListItem.Title>{item.id}</ListItem.Title>
-            <Image source={item.img} />
+            <ListItem.Title>{item.text}</ListItem.Title>
+            <Image 
+            source={getImgSource(item.img)} 
+            style={styles.thumbnail} />
           </View>
           <TouchableOpacity onPress={() => handleDelete(item.id)}>
             <Icon type='antdesign' name='delete' />
@@ -54,6 +49,7 @@ console.log(person.ideas);
         </ListItem.Content>
       </ListItem>
     );
+  }
 
 
   return (
@@ -113,6 +109,10 @@ const styles = StyleSheet.create({
     flexDirection: 'row',
     justifyContent: 'space-between',
     alignItems: 'center',
+  },
+  thumbnail: {
+    width: 156,
+    height: 234,
   },
   fab: {
     position: 'absolute',
