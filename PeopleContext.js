@@ -98,15 +98,15 @@ export const PeopleProvider = ({ children }) => {
 
   const saveIdea = async (personID, text, img) => {
     try{
-      //error simulation
-      // throw new Error('cant do it');
-      if (!text) {
-        throw new Error('Idea name is required');
+      if (!text || text.trim() === '') {
+        return { success: false, type: 'validation', message: 'Idea name is required' };
       }
       if (!img) {
-        throw new Error('Photo required, press shutter button to take a picture');
+        return { success: false, type: 'validation', message: 'Photo required, press shutter button to take a picture' };
       }
-
+      //error simulation
+      // throw new Error('cant do it');
+      
       const updatedPeople = people.map((person) => {
         if (person.id === personID) {
           const newIdea = {
@@ -123,7 +123,7 @@ export const PeopleProvider = ({ children }) => {
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
       return {success: true};
     } catch (error) {
-      return { success: false, message: error.message };
+      return { success: false, type: 'operation', message: error.message };
   };
 }
 
