@@ -21,31 +21,45 @@ export default function AddPersonScreen() {
   const [name, setName] = useState('');
   const [dob, setDob] = useState('');
   const [errMsg, setErrMsg] = useState('');
-  const { addPerson } = useContext(PeopleContext);
+  const { savePerson } = useContext(PeopleContext);
   const navigation = useNavigation();
 
   const [visible, setVisible] = useState(false);
   const toggleDialog = () => setVisible(!visible);
 
+
+
   const handleSave = async () => {
-    let validInputs = true;
-    if (!name) {
-      setErrMsg('Name is required');
-      validInputs = false;
-    }
-    if (!dob) {
-      setErrMsg('Date of Birth is required');
-      validInputs = false;
-    }
-    if (validInputs) {
-      const success = await addPerson(name, dob);
-      if (success) {
-        navigation.goBack();
-      } else {
-        //console.log('Error on the person screen saving');
+    const result = await savePerson(name, dob);
+    if (result.success) {
+      navigation.goBack();
+    } else {
+      if (result.type === 'validation') {
+        setErrMsg(result.message);
+      } else if (result.type === 'operation') {
         setVisible(true);
-      }
+      };
     }
+
+
+    // let validInputs = true;
+    // if (!name) {
+    //   setErrMsg('Name is required');
+    //   validInputs = false;
+    // }
+    // if (!dob) {
+    //   setErrMsg('Date of Birth is required');
+    //   validInputs = false;
+    // }
+    // if (validInputs) {
+    //   const success = await addPerson(name, dob);
+    //   if (success) {
+    //     navigation.goBack();
+    //   } else {
+    //     //console.log('Error on the person screen saving');
+    //     setVisible(true);
+    //   }
+    // }
   };
 
   return (

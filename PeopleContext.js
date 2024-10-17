@@ -1,7 +1,7 @@
-import React, { createContext, useState, useEffect } from "react";
+import React, { createContext, useState, useEffect } from 'react';
 import { Dimensions } from 'react-native';
-import AsyncStorage from "@react-native-async-storage/async-storage";
-import { randomUUID } from "expo-crypto";
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import { randomUUID } from 'expo-crypto';
 
 const PeopleContext = createContext();
 
@@ -26,8 +26,19 @@ export const PeopleProvider = ({ children }) => {
     console.log(people);
   }, []);
 
-  const addPerson = async (name, dob) => {
+  const savePerson = async (name, dob) => {
     try {
+      if (!name || name.trim() === '') {
+        return { success: false, type: 'validation', message: 'Name is required' };
+      }
+      if (!dob) {
+        return {
+          success: false,
+          type: 'validation',
+          message: 'Birthday required, use date picker to select',
+        };
+      }
+
       //error simulation
       //throw new Error('cant do it');
 
@@ -38,19 +49,16 @@ export const PeopleProvider = ({ children }) => {
         ideas: [],
       };
       const updatedPeople = [...people, newPerson];
-  
+
       const sortedPeople = sortDobs(updatedPeople);
       console.log(sortedPeople);
       setPeople(sortedPeople);
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
-      return true;
+      return {success: true};
     } catch (error) {
-      console.log("error saving person:", error);
-      return false;
+      return { success: false, type: 'operation', message: error.message };
     }
   };
-
-
 
   const deletePerson = async (id) => {
     //console.log(`delete this id: ${id}`);
@@ -59,33 +67,29 @@ export const PeopleProvider = ({ children }) => {
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
   };
 
-
-
   const deleteIdea = async (itemID, personID) => {
-    const updatedPeople = people.map((person) =>{
-      if(person.id === personID) {
-        return {...person, ideas: person.ideas.filter((idea) => idea.id !== itemID)};
+    const updatedPeople = people.map((person) => {
+      if (person.id === personID) {
+        return { ...person, ideas: person.ideas.filter((idea) => idea.id !== itemID) };
       }
       return person;
     });
     setPeople(updatedPeople);
     await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
-  }
-
-
+  };
 
   const sortDobs = (list) => {
     return list.sort((a, b) => {
       const [yearA, monthA, dayA] = a.dob.split('/').map(Number);
       const [yearB, monthB, dayB] = b.dob.split('/').map(Number);
-      if (monthA === monthB) { //if months are same, compare days
+      if (monthA === monthB) {
+        //if months are same, compare days
         return dayA - dayB;
       } else {
         return monthA - monthB;
       }
-    })
-  }
-
+    });
+  };
 
   const calculateImgDimensions = (screenWidthPercent) => {
     const screenWidth = Dimensions.get('window').width;
@@ -95,18 +99,21 @@ export const PeopleProvider = ({ children }) => {
     return { imageWidth, imageHeight };
   };
 
-
   const saveIdea = async (personID, text, img) => {
-    try{
+    try {
       if (!text || text.trim() === '') {
         return { success: false, type: 'validation', message: 'Idea name is required' };
       }
       if (!img) {
-        return { success: false, type: 'validation', message: 'Photo required, press shutter button to take a picture' };
+        return {
+          success: false,
+          type: 'validation',
+          message: 'Photo required, press shutter button to take a picture',
+        };
       }
       //error simulation
       // throw new Error('cant do it');
-      
+
       const updatedPeople = people.map((person) => {
         if (person.id === personID) {
           const newIdea = {
@@ -121,14 +128,17 @@ export const PeopleProvider = ({ children }) => {
       });
       setPeople(updatedPeople);
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
-      return {success: true};
+      return { success: true };
     } catch (error) {
       return { success: false, type: 'operation', message: error.message };
+    }
   };
-}
 
-
-  return <PeopleContext.Provider value={{ people, addPerson, deletePerson, deleteIdea, saveIdea }}>{children}</PeopleContext.Provider>;
+  return (
+    <PeopleContext.Provider value={{ people, savePerson, deletePerson, deleteIdea, saveIdea }}>
+      {children}
+    </PeopleContext.Provider>
+  );
 };
 
 export default PeopleContext;
