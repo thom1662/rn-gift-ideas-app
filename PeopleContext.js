@@ -100,6 +100,12 @@ export const PeopleProvider = ({ children }) => {
     try{
       //error simulation
       // throw new Error('cant do it');
+      if (!text) {
+        throw new Error('Idea name is required');
+      }
+      if (!img) {
+        throw new Error('Photo required, press shutter button to take a picture');
+      }
 
       const updatedPeople = people.map((person) => {
         if (person.id === personID) {
@@ -107,19 +113,17 @@ export const PeopleProvider = ({ children }) => {
             id: randomUUID(),
             text,
             img,
-            ...calculateImgDimensions(0.6),
+            ...calculateImgDimensions(0.7),
           };
           return { ...person, ideas: [...person.ideas, newIdea] };
         }
-        console.log(person);
         return person;
       });
       setPeople(updatedPeople);
       await AsyncStorage.setItem(STORAGE_KEY, JSON.stringify(updatedPeople));
-      return true;
+      return {success: true};
     } catch (error) {
-      console.log("error saving idea:", error);
-      return false;
+      return { success: false, message: error.message };
   };
 }
 
