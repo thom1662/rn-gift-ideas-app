@@ -1,8 +1,11 @@
 export default {
   surface: '#F9F6F2',
-  btnPositive: '#',
-  btnNegative: '#',
-  fabColor: '#',
-  iconGradient: 'radial-gradient(46.74% 41.32% at 87.77% 49.88%, #5DCAFA 8%, #C2A7E6 43%, #F67CAC 72%)',
-  
+  blue: '#8EDAFC',
+  purple: '#D4C1EE',
+  pink: '#F9A3C5',
+  green: '#7BDC9F',
+  yellow: '#FDE471',
+  orange: '#FDBA84',
+  btnSecondary: '#B5235C',
+  btnPrimary: '#0076AB',
 };

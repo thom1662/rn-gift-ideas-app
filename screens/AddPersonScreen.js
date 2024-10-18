@@ -1,21 +1,13 @@
 import React, { useContext, useState } from 'react';
-import {
-  View,
-  Button,
-  StyleSheet,
-  SafeAreaView,
-  KeyboardAvoidingView,
-  Text,
-  Platform,
-  ImageBackground,
-} from 'react-native';
+import { View, Button, StyleSheet, SafeAreaView, KeyboardAvoidingView, Platform, ImageBackground } from 'react-native';
 import PeopleContext from '../PeopleContext';
 import background from '../assets/background-sprinkles.png';
 import DatePicker from 'react-native-modern-datepicker';
 import { Input } from '@rneui/themed';
 import { useNavigation } from '@react-navigation/native';
-//import { Dialog } from '@rneui/base';
 import CustomDialog from '../components/Dialog';
+import CustomBtn from '../components/Button';
+import colors from '../assets/colors';
 
 export default function AddPersonScreen() {
   const [name, setName] = useState('');
@@ -27,8 +19,7 @@ export default function AddPersonScreen() {
   const [visible, setVisible] = useState(false);
   const toggleDialog = () => setVisible(!visible);
 
-
-
+  //save person, handle error messages or modal depending on err
   const handleSave = async () => {
     const result = await savePerson(name, dob);
     if (result.success) {
@@ -38,41 +29,38 @@ export default function AddPersonScreen() {
         setErrMsg(result.message);
       } else if (result.type === 'operation') {
         setVisible(true);
-      };
+      }
     }
-
-
-    // let validInputs = true;
-    // if (!name) {
-    //   setErrMsg('Name is required');
-    //   validInputs = false;
-    // }
-    // if (!dob) {
-    //   setErrMsg('Date of Birth is required');
-    //   validInputs = false;
-    // }
-    // if (validInputs) {
-    //   const success = await addPerson(name, dob);
-    //   if (success) {
-    //     navigation.goBack();
-    //   } else {
-    //     //console.log('Error on the person screen saving');
-    //     setVisible(true);
-    //   }
-    // }
   };
 
   return (
     <ImageBackground source={background} style={{ flex: 1, resizeMode: 'cover', backgroundColor: '#fff' }}>
       <SafeAreaView style={styles.container}>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.inputs}>
-          <Input label='Name' value={name} onChangeText={setName} errorMessage={errMsg} />
+          <Input
+            label='Name'
+            inputStyle={{ backgroundColor: 'colors.surface', borderBottomWidth: 1 }}
+            value={name}
+            onChangeText={setName}
+            errorMessage={errMsg}
+          />
 
-          <DatePicker style={styles.datePicker} mode='calendar' onSelectedChange={(date) => setDob(date)} />
+          <DatePicker
+            style={{ borderRadius: 20 }}
+            options={{
+              backgroundColor: colors.surface,
+              mainColor: colors.pink,
+              selectedTextColor: 'black',
+            }}
+            mode='calendar'
+            onSelectedChange={(date) => setDob(date)}
+          />
         </KeyboardAvoidingView>
 
-        <Button title='Save' onPress={handleSave} />
-        <Button title='Cancel' onPress={() => navigation.goBack()} />
+        <View style={styles.btns}>
+          <CustomBtn title='Save' onPress={handleSave} color={colors.btnPrimary} />
+          <CustomBtn title='Cancel' color={colors.btnSecondary} onPress={() => navigation.goBack()} />
+        </View>
 
         <CustomDialog
           visible={visible}
@@ -93,7 +81,8 @@ const styles = StyleSheet.create({
     flex: 1,
     paddingVertical: 24,
   },
-  datePicker: {
-    borderRadius: 20,
+  btns: {
+    justifyContent: 'space-evenly',
+    marginBottom: 24,
   },
 });

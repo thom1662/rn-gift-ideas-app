@@ -6,6 +6,7 @@ import { FAB } from '@rneui/themed';
 import PeopleContext from '../PeopleContext';
 import { GestureHandlerRootView, Swipeable, TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon, ListItem } from '@rneui/base';
+import colors from '../assets/colors';
 
 export default function PeopleScreen() {
   const navigation = useNavigation();
@@ -31,11 +32,11 @@ export default function PeopleScreen() {
       )}
     >
       <ListItem.Content>
-        <ListItem.Title>{item.name}</ListItem.Title>
+        <ListItem.Title style={{fontWeight: '500'}}>{item.name}</ListItem.Title>
         <ListItem.Subtitle>{formatDate(item.dob)}</ListItem.Subtitle>
       </ListItem.Content>
 
-      <Icon type='antdesign' name='gift' />
+      <Icon type='antdesign' name='gift' size={32} />
     </ListItem.Swipeable>
   );
 
@@ -58,13 +59,15 @@ export default function PeopleScreen() {
           )}
 
           <FAB
-            size='small'
+            size='medium'
+            color={colors.btnPrimary}
             title='Add Person'
+            titleStyle={{ color: 'white', fontWeight: '600' }}
             icon={{
               name: 'add',
+              size: 28,
               color: 'white',
             }}
-            color=''
             style={styles.fab}
             onPress={() => navigation.navigate('AddPerson')}
           />
@@ -87,11 +90,11 @@ const styles = StyleSheet.create({
     marginVertical: 10,
   },
   listItem: {
-    backgroundColor: '#F9F6F2',
+    backgroundColor: colors.surface,
     padding: 20,
   },
   deleteButton: {
-    backgroundColor: 'red',
+    backgroundColor: colors.btnSecondary,
     flexDirection: 'row',
     justifyContent: 'center',
     alignItems: 'center',
@@ -106,7 +109,6 @@ const styles = StyleSheet.create({
     right: 50,
     bottom: 40,
     marginVertical: 32,
-    //TODO: Make closer to middle
 
     // Shadow for iOS
     shadowColor: '#000',
