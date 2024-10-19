@@ -6,6 +6,6 @@ export default {
   green: '#7BDC9F',
   yellow: '#FDE471',
   orange: '#FDBA84',
-  btnSecondary: '#B5235C',
   btnPrimary: '#0076AB',
+  btnSecondary: '#B5235C',
 };

@@ -1,7 +1,7 @@
 import { useContext, useEffect, useState } from 'react';
 import { randomUUID } from 'expo-crypto';
-import { SafeAreaView, StyleSheet, Text, View, FlatList, Image, ImageBackground } from 'react-native';
-import { GestureHandlerRootView, Swipeable, TouchableOpacity } from 'react-native-gesture-handler';
+import { SafeAreaView, StyleSheet, Text, View, FlatList, Image, ImageBackground, Pressable } from 'react-native';
+import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import PeopleContext from '../PeopleContext';
 import background from '../assets/background-sprinkles.png';
 import { useNavigation } from '@react-navigation/native';
@@ -23,7 +23,7 @@ export default function IdeaScreen({ route }) {
     setRefresh(!refresh); //re-render
   };
 
-  console.log(person.ideas);
+  //console.log(person.ideas);
 
   const renderItem = ({ item }) => {
     const getImgSource = (img) => {
@@ -34,16 +34,16 @@ export default function IdeaScreen({ route }) {
     };
 
     return (
-      <ListItem>
-        <ListItem.Content style={styles.listContent}>
+      <ListItem style={{flex: 1}} containerStyle={styles.listItem}>
+        <ListItem.Content>
           <View>
-            <ListItem.Title>{item.text}</ListItem.Title>
+            <ListItem.Title style={{ fontWeight: '600', fontSize: '18'}}>{item.text}</ListItem.Title>
             <Image source={getImgSource(item.img)} style={styles.thumbnail} />
+            <Pressable onPress={() => handleDelete(item.id)} style={styles.deleteBtn}>
+              <Icon type='antdesign' name='delete' size={28} color={'#fff'} />
+              <Text style={{ color: '#fff', paddingTop: 6, fontWeight: '500' }}>Delete</Text>
+            </Pressable>
           </View>
-          <TouchableOpacity onPress={() => handleDelete(item.id)}>
-            <Icon type='antdesign' name='delete' size={28} />
-            <Text>Delete</Text>
-          </TouchableOpacity>
         </ListItem.Content>
       </ListItem>
     );
@@ -51,11 +51,11 @@ export default function IdeaScreen({ route }) {
 
   return (
     <ImageBackground source={background} style={{ flex: 1, resizeMode: 'cover', backgroundColor: '#fff' }}>
-      <GestureHandlerRootView>
-        <SafeAreaView style={styles.container}>
+      <GestureHandlerRootView style={{ flex: 1 }}>
+        <SafeAreaView style={{ flex: 1 }}>
           <Text style={styles.headline}>Gift ideas for {person.name}</Text>
 
-          <View style={{flex: 1}}>
+          <View style={{ flex: 1 }}>
             {person.ideas.length === 0 ? (
               <View style={styles.empty}>
                 <Text style={styles.emptyMsg}>Add an idea to get started</Text>
@@ -67,7 +67,7 @@ export default function IdeaScreen({ route }) {
                 keyExtractor={(item) => item.id}
                 renderItem={renderItem}
                 ItemSeparatorComponent={() => <View style={{ height: 10 }} />}
-                extraData={refresh} //remove
+                numColumns={2}
               />
             )}
 
@@ -92,9 +92,6 @@ export default function IdeaScreen({ route }) {
 }
 
 const styles = StyleSheet.create({
-  container: {
-    flex: 1,
-  },
   headline: {
     fontSize: 24,
     fontWeight: '600',
@@ -112,18 +109,32 @@ const styles = StyleSheet.create({
     padding: 10,
   },
   list: {
-    marginVertical: 10,
+    marginVertical: 8,
   },
-  listContent: {
-    flexDirection: 'row',
-    justifyContent: 'space-between',
-    alignItems: 'flex-end',
+  listItem: {
+    alignSelf: 'flex-start',
+    flexShrink: 1,
+
   },
+  //listContent: {
+    //flexDirection: 'row',
+    //justifyContent: 'space-between',
+    //alignItems: 'flex-end',
+  //},
   thumbnail: {
-    width: 125,
-    height: 187.5,
+    width: 165,
+    height: 247.5,
     borderRadius: 10,
     marginVertical: 6,
+    justifyContent: 'flex-end',
+  },
+  deleteBtn: {
+    position: 'absolute',
+    bottom: 8,
+    right: 8,
+    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Add background for better visibility
+    padding: 8, // Add padding for better touch area
+    borderRadius: 16, // Optional: Add border radius
   },
   fab: {
     position: 'absolute',

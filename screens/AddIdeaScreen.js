@@ -17,6 +17,7 @@ import { Input, Button } from '@rneui/themed';
 import { Icon } from '@rneui/base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomDialog from '../components/Dialog';
+import CustomBtn from '../components/Button';
 
 export default function AddIdeaScreen({ route }) {
   const navigation = useNavigation();
@@ -89,16 +90,17 @@ export default function AddIdeaScreen({ route }) {
   return (
     <ImageBackground source={background} style={{ flex: 1, resizeMode: 'cover', backgroundColor: '#fff' }}>
       <SafeAreaView style={styles.container}>
-        <Text>Add ideas for {person.name}</Text>
+        <Text style={styles.headline}>Add an idea for {person.name}</Text>
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'}>
           <Input
-            label='Gift Idea'
+            label='Idea Name'
             value={itemText}
             onChangeText={(text) => {
               setItemText(text);
               setErrMsg('');
             }}
             errorMessage={errMsg}
+            errorStyle={{ fontSize: 16 }}
           />
         </KeyboardAvoidingView>
         {!photo ? (
@@ -112,8 +114,8 @@ export default function AddIdeaScreen({ route }) {
             <Image source={{ uri: photo }} style={{ flex: 1 }} />
           </View>
         )}
-        <Button onPress={handleSave} title='Save' />
-        <Button onPress={() => navigation.navigate('Ideas', { id: person.id })} title='Cancel' />
+        <CustomBtn onPress={handleSave} title='Save' />
+        <CustomBtn onPress={() => navigation.navigate('Ideas', { id: person.id })} title='Cancel' outlined={true} />
 
         <CustomDialog
           visible={visible}
@@ -130,11 +132,18 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
   },
+  headline: {
+    fontSize: 24,
+    fontWeight: '600',
+    margin: 16,
+    alignSelf: 'center',
+  },
   camera: {
     flex: 1,
-    margin: 24,
+    margin: 16,
     padding: 10,
     justifyContent: 'flex-end',
+    borderRadius: 8,
   },
   camBtn: {
     alignSelf: 'center',

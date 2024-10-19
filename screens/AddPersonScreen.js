@@ -39,18 +39,19 @@ export default function AddPersonScreen() {
         <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' : 'height'} style={styles.inputs}>
           <Input
             label='Name'
-            inputStyle={{ backgroundColor: 'colors.surface', borderBottomWidth: 1 }}
+            inputStyle={{ backgroundColor: 'colors.surface', paddingVertical: 8 }}
             value={name}
             onChangeText={setName}
             errorMessage={errMsg}
+            errorStyle={{ fontSize: 16 }}
           />
 
           <DatePicker
             style={{ borderRadius: 20 }}
             options={{
               backgroundColor: colors.surface,
-              mainColor: colors.pink,
-              selectedTextColor: 'black',
+              mainColor: colors.blue,
+              selectedTextColor: '#000',
             }}
             mode='calendar'
             onSelectedChange={(date) => setDob(date)}
@@ -58,8 +59,12 @@ export default function AddPersonScreen() {
         </KeyboardAvoidingView>
 
         <View style={styles.btns}>
-          <CustomBtn title='Save' onPress={handleSave} color={colors.btnPrimary} />
-          <CustomBtn title='Cancel' color={colors.btnSecondary} onPress={() => navigation.goBack()} />
+          <CustomBtn title='Save' onPress={handleSave}  />
+          <CustomBtn 
+          title='Cancel' 
+          onPress={() => navigation.goBack()}
+          outlined = {true}
+          />
         </View>
 
         <CustomDialog
