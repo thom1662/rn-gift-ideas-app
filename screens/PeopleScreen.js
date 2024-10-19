@@ -4,7 +4,7 @@ import { FlatList, View, Text, SafeAreaView, StyleSheet, ImageBackground } from 
 import background from '../assets/background-sprinkles.png';
 import { FAB } from '@rneui/themed';
 import PeopleContext from '../PeopleContext';
-import { GestureHandlerRootView, Swipeable, TouchableOpacity } from 'react-native-gesture-handler';
+import { GestureHandlerRootView, TouchableOpacity } from 'react-native-gesture-handler';
 import { Icon, ListItem } from '@rneui/base';
 import colors from '../assets/colors';
 
@@ -14,7 +14,7 @@ export default function PeopleScreen() {
   const { people, deletePerson } = useContext(PeopleContext);
 
   const formatDate = (dobString) => {
-    const date = new Date(dobString.replace(/\//g, '-')); // Ensure the date string is in the correct format? no slashes
+    const date = new Date(dobString.replace(/\//g, '-')); // Ensure the date string is in the correct format, no slashes
     let options = { month: 'long', day: 'numeric' };
     return new Intl.DateTimeFormat('en-CA', options).format(date);
   };

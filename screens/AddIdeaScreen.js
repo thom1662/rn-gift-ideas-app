@@ -13,7 +13,7 @@ import {
   ImageBackground,
 } from 'react-native';
 import { Camera, CameraView } from 'expo-camera';
-import { Input, Button } from '@rneui/themed';
+import { Input } from '@rneui/themed';
 import { Icon } from '@rneui/base';
 import { TouchableOpacity } from 'react-native-gesture-handler';
 import CustomDialog from '../components/Dialog';
@@ -58,7 +58,6 @@ export default function AddIdeaScreen({ route }) {
   const takePicture = async () => {
     if (cameraRef.current) {
       const availableSizes = await cameraRef.current.getAvailablePictureSizesAsync();
-      //console.log('Available Picture Sizes:', availableSizes);
 
       const options = {
         quality: 0.8,

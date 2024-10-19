@@ -1,6 +1,6 @@
 import React from 'react';
 import { Button } from '@rneui/themed';
-import { StyleSheet, Text } from 'react-native';
+import { StyleSheet } from 'react-native';
 import colors from '../assets/colors';
 
 
@@ -16,10 +16,9 @@ const CustomBtn = ({ onPress, title, outlined }) => {
       color= {colors.btnPrimary}
       type={outlined ? 'outline' : 'solid'}
       radius= 'lg'
-      buttonStyle={ outlined? { borderColor: colors.btnPrimary, borderWidth: 2, backgroundColor: '#fff' } : {} }
+      buttonStyle={ outlined? { borderColor: colors.btnPrimary, borderWidth: 2, borderBottomWidth: 4, backgroundColor: '#fff' } : {} }
       />
     )
-
   }
 
 

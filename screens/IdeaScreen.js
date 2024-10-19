@@ -1,5 +1,4 @@
-import { useContext, useEffect, useState } from 'react';
-import { randomUUID } from 'expo-crypto';
+import { useContext, useState } from 'react';
 import { SafeAreaView, StyleSheet, Text, View, FlatList, Image, ImageBackground, Pressable } from 'react-native';
 import { GestureHandlerRootView } from 'react-native-gesture-handler';
 import PeopleContext from '../PeopleContext';
@@ -16,14 +15,13 @@ export default function IdeaScreen({ route }) {
 
   const person = people.find((p) => p.id === id);
 
-  const [refresh, setRefresh] = useState(false); //remove
+  const [refresh, setRefresh] = useState(false);
 
   const handleDelete = async (itemID) => {
     await deleteIdea(itemID, person.id);
     setRefresh(!refresh); //re-render
   };
 
-  //console.log(person.ideas);
 
   const renderItem = ({ item }) => {
     const getImgSource = (img) => {
@@ -114,13 +112,9 @@ const styles = StyleSheet.create({
   listItem: {
     alignSelf: 'flex-start',
     flexShrink: 1,
+    backgroundColor: 'transparent',
 
   },
-  //listContent: {
-    //flexDirection: 'row',
-    //justifyContent: 'space-between',
-    //alignItems: 'flex-end',
-  //},
   thumbnail: {
     width: 165,
     height: 247.5,
@@ -132,9 +126,9 @@ const styles = StyleSheet.create({
     position: 'absolute',
     bottom: 8,
     right: 8,
-    backgroundColor: 'rgba(0, 0, 0, 0.5)', // Optional: Add background for better visibility
-    padding: 8, // Add padding for better touch area
-    borderRadius: 16, // Optional: Add border radius
+    backgroundColor: 'rgba(0, 0, 0, 0.5)',
+    padding: 8, 
+    borderRadius: 16,
   },
   fab: {
     position: 'absolute',
